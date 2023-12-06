@@ -43,7 +43,6 @@ class hopfieldNet:
       # Compute activation for randomly indexed neuron
       self.index_activation = np.dot(self.weights[self.rand_index, :], 
                                      self.state)
-      print(self.index_activation)
       # threshold function for binary state change
       if self.index_activation < 0:
         self.state[self.rand_index] = -1

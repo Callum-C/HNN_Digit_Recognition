@@ -10,7 +10,7 @@ def Test_Hopfield():
   Test out the Hopfield_Network object on some MNIST data.
   """
 
-  fname = 'Digits/7.png'
+  fname = 'Digits/2.png'
   img = cv2.imread(fname, 0)
   img_norm = cv2.normalize(img, None, -1, 1.0, cv2.NORM_MINMAX, dtype=cv2.CV_32F)
 
@@ -57,7 +57,6 @@ def Test_Hopfield():
         # quit pygame
         pygame.quit()
 
-    print(H_Net.state.shape)
     cells = H_Net.state.reshape(28,28).T
 
     # Fills surface with colour
@@ -81,7 +80,7 @@ def Test_Hopfield():
     H_Net.update_network_state(16)
     H_Net.compute_energy()
     pygame.display.update() # Updates display from new .draw in update function
-    pygame.time.wait(50)
+    # pygame.time.wait(50)
 
 
 Test_Hopfield()
