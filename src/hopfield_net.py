@@ -13,7 +13,7 @@ class hopfieldNet:
 
     # Patterns for network training / retrieval
     self.memory = np.array(input)
-
+    print(self.memory.size)
     # Single vs multiple memories
     if self.memory.size > 1:
       self.n = self.memory.shape[1]
@@ -21,11 +21,10 @@ class hopfieldNet:
       self.n = len(self.memory)
 
     # Construct network
-    self.state = np.random.randint(-2, 2, (self.n, 1)) # state vector
-    self.weights = np.zeroes((self.n, self.n)) # weights vector
+    self.state = np.random.randint(0, 2, (self.n, self.n)) # state vector
+    self.weights = np.zeros((self.n, self.n)) # weights vector
     self.energies = [] # container for tracking of energy
 
-  
   def network_learning(self): 
     """
     Learn the pattern / patterns.
@@ -48,6 +47,7 @@ class hopfieldNet:
       # Compute activation for randomly indexed neuron
       self.index_activation = np.dot(self.weights[self.rand_index, :], 
                                      self.state)
+      print(self.index_activation)
       # threshold function for binary state change
       if self.index_activation < 0:
         self.state[self.rand_index] = -1

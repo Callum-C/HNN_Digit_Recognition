@@ -1,36 +1,21 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import requests, gzip, os, hashlib
+import cv2
 import pygame
 
 from hopfield_net import hopfieldNet
 
-# Fetch MNIST dataset from the ~SOURCE~
-def fetch_MNIST(url):
-  fp = os.path.join("/tmp", hashlib.md5(url.encode('utf-8')).hexdigest())
-  if os.path.isfile(fp):
-    dat = f.read()
-  else:
-    with open(fp, "wb") as f:
-      dat = requests.get(url).content
-      f.write(dat)
-
-  return np.frombuffer(gzip.decompress(dat), dtype=np.uint8).copy()
-
-def MNIST_Hopfield():
+def Test_Hopfield():
   """
   Test out the Hopfield_Network object on some MNIST data.
-  Fetch MNIST dataset for some random memory downloads.
   """
 
-  X = fetch_MNIST("http://yann.lecun.com/exdb/mnist/train-images-idx3-ubyte.gz"
-        )[0x10:].reshape((-1,784))
-  
-  # Convert to binary
-  X_binary = np.where(X>20, 1, -1)
+  fname = 'Digits/0.png'
+  img = cv2.imread(fname, 0)
+  img_norm = cv2.normalize(img, None, 0, 1.0, cv2.NORM_MINMAX, dtype=cv2.CV_32F)
 
   # Snag a memory from computer brain
-  memories_list = np.array([X_binary[np.random.randint(len(X))]])
+  memories_list = np.array(img_norm)
 
   # Initalize Hopfield object
   H_Net = hopfieldNet(memories_list)
@@ -98,7 +83,7 @@ def MNIST_Hopfield():
     pygame.time.wait(50)
 
 
-MNIST_Hopfield()
+Test_Hopfield()
 plt.show()
 
       
