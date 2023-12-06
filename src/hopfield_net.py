@@ -1,27 +1,23 @@
 import numpy as np
-import matplotlib.pyplot as plt
 
 class hopfieldNet: 
   """
-  Network class.
+  Hopfield Neural Network class.
   """
 
   def __init__(self, input):
     """
-    Initialize network variables and memory.
+    Initialize a Hopfield Neural Network object.
+    Set network variables and memory.
     """
 
     # Patterns for network training / retrieval
-    self.memory = np.array(input)
-    print(self.memory.size)
-    # Single vs multiple memories
-    if self.memory.size > 1:
-      self.n = self.memory.shape[1]
-    else:
-      self.n = len(self.memory)
+    self.memory = np.array([np.array(input).flatten()])
+
+    self.n = self.memory.shape[1] # Image size: (28x28)
 
     # Construct network
-    self.state = np.random.randint(0, 2, (self.n, self.n)) # state vector
+    self.state = np.random.randint(0, 2, (self.n, 1)) # state vector
     self.weights = np.zeros((self.n, self.n)) # weights vector
     self.energies = [] # container for tracking of energy
 
@@ -31,7 +27,7 @@ class hopfieldNet:
     """
 
     # hebbian learning
-    self.weights = (1 / self.memory.shape[0]) * self.memory.T @ self.memory
+    self.weights = (1 / self.memory.shape[0]) * self.memory.T @ self.memory # 1 should be (1 / Number of patterns)
     np.fill_diagonal(self.weights, 0)
 
   

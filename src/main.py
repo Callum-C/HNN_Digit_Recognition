@@ -10,15 +10,15 @@ def Test_Hopfield():
   Test out the Hopfield_Network object on some MNIST data.
   """
 
-  fname = 'Digits/0.png'
+  fname = 'Digits/7.png'
   img = cv2.imread(fname, 0)
-  img_norm = cv2.normalize(img, None, 0, 1.0, cv2.NORM_MINMAX, dtype=cv2.CV_32F)
+  img_norm = cv2.normalize(img, None, -1, 1.0, cv2.NORM_MINMAX, dtype=cv2.CV_32F)
 
   # Snag a memory from computer brain
-  memories_list = np.array(img_norm)
-
+  memories = np.array(img_norm)
+  
   # Initalize Hopfield object
-  H_Net = hopfieldNet(memories_list)
+  H_Net = hopfieldNet(memories)
   H_Net.network_learning()
 
   # Draw it all out, updating board each update iteration
@@ -57,6 +57,7 @@ def Test_Hopfield():
         # quit pygame
         pygame.quit()
 
+    print(H_Net.state.shape)
     cells = H_Net.state.reshape(28,28).T
 
     # Fills surface with colour
