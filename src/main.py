@@ -47,15 +47,17 @@ def Test_Hopfield():
         plt.setp(plt.gcf().get_axes(), xticks=[], yticks=[])
 
         # Plot energies
-        plt.figure("Energy", figsize=(10,7))
-        x = np.arange(len(H_Net.energies), s=1, color='red')
+        plt.figure("Energy",figsize=(10,7))
+        x = np.arange(len(H_Net.energies))
+        plt.scatter(x,np.array(H_Net.energies),s=1,color='red')
         plt.xlabel("Generation")
         plt.ylabel("Energy")
-        plt.title("Network Energy over Successive Generations", fontsize=15)
+        plt.title("Network Energy over Successive Generations",fontsize=15)
         plt.setp(plt.gcf().get_axes(), xticks=[], yticks=[])
 
         # quit pygame
         pygame.quit()
+        return
 
     cells = H_Net.state.reshape(28,28).T
 
