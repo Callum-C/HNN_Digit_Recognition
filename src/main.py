@@ -2,23 +2,30 @@ import numpy as np
 import matplotlib.pyplot as plt
 import cv2
 import pygame
+import copy
 
 from hopfield_net import hopfieldNet
 
 def Test_Hopfield():
   """
-  Test out the Hopfield_Network object on some MNIST data.
+  Test out the Hopfield_Network object on some 8-bit styled numbers.
   """
 
-  fname = 'Digits/2.png'
-  img = cv2.imread(fname, 0)
-  img_norm = cv2.normalize(img, None, -1, 1.0, cv2.NORM_MINMAX, dtype=cv2.CV_32F)
+  fnames = ['Digits/2.png', 'Digits/0.png']
+  images = []
+  images_flat = []
+  for fname in fnames:
+    img = cv2.imread(fname, 0)
+    img_norm = cv2.normalize(img, None, -1, 1.0, cv2.NORM_MINMAX, dtype=cv2.CV_32F)
+    images.append(copy.deepcopy(img_norm))
+    img_norm = np.array(img_norm).flatten()
+    images_flat.append(img_norm)
 
   # Snag a memory from computer brain
-  memories = np.array(img_norm)
+  memories = np.array(images)
   
   # Initalize Hopfield object
-  H_Net = hopfieldNet(memories)
+  H_Net = hopfieldNet(memories, images)
   H_Net.network_learning()
 
   # Draw it all out, updating board each update iteration
@@ -38,12 +45,12 @@ def Test_Hopfield():
       if event.type == pygame.QUIT:
         Running = False
 
-        # Plot weights matrix
+        # Plot Weights matrix
         plt.figure("weights", figsize=(10,7))
-        plt.imshow(H_Net.weights, cmap='RdPu')
+        plt.imshow(H_Net.weights,cmap='RdPu') 
         plt.xlabel("Each row/column represents a neuron, each square a connection")
 
-        plt.title(" 4096 Neurons - 16,777,216 unique connections", fontsize=15)
+        plt.title(" 4096 Neurons - 16,777,216 unique connections",fontsize=15)
         plt.setp(plt.gcf().get_axes(), xticks=[], yticks=[])
 
         # Plot energies
