@@ -1,58 +1,69 @@
 import numpy as np
+import cv2
 
-class hopfieldNet: 
+class hopfieldNet:
   """
-  Hopfield Neural Network class.
+  Hopfield Neural Network for Digit Recognition.
   """
 
   def __init__(self, input):
     """
-    Initialize a Hopfield Neural Network object.
-    Set network variables and memory.
+    Construct a Hopfield Neural Network object.
+    Set network variables and memories.
     """
 
-    # Patterns for network training / retrieval
-    self.memory = np.array([np.array(input).flatten()])
+    # Patterns for network to remember
+    self.memories = np.array(input)
 
-    self.n = self.memory.shape[1] # Image size: (28x28)
+    # m = number of memories stored
+    self.m = self.memories.shape[0]
+
+    # n = number of neurons in a row
+    # - Square grid so total number of nuerons is n^2
+    self.n = self.memories.shape[1]
 
     # Construct network
-    self.state = np.random.randint(0, 2, (self.n, 1)) # state vector
-    self.weights = np.zeros((self.n, self.n)) # weights vector
-    self.energies = [] # container for tracking of energy
+    self.states = np.random.randint(0, 2, (self.n, 1))
+    self.states = cv2.normalize(self.states, None, -1, 1.0, cv2.NORM_MINMAX, 
+                                dtype=cv2.CV_64F)
+    self.weights = np.zeros((self.n, self.n))
+    self.energies = []
 
-  def network_learning(self): 
+  def train(self):
     """
-    Learn the pattern / patterns.
-    """
-
-    # hebbian learning
-    self.weights = (1 / self.memory.shape[0]) * self.memory.T @ self.memory # 1 should be (1 / Number of patterns)
-    np.fill_diagonal(self.weights, 0)
-
-  
-  def update_network_state(self, n_update):
-    """
-    Update Network.
+    Learn the memories / train the network.
     """
 
-    # update n neurons randomly
-    for neuron in range(n_update): 
-      # pick random neuron in the state vector
-      self.rand_index = np.random.randint(0, self.n) 
-      # Compute activation for randomly indexed neuron
-      self.index_activation = np.dot(self.weights[self.rand_index, :], 
-                                     self.state)
-      # threshold function for binary state change
+    for memory in self.memories:
+      for i in range(len(memory)):
+        for j in range(len(memory)):
+          if i < j:
+            if memory[i] == memory[j]:
+              self.weights[i][j] += 1
+            else:
+              self.weights[i][j] -= 1
+
+  def update_states(self, n_updates):
+    """
+    Pick random neurons n_updates times and update their state.
+    """
+
+    for neuron in range(n_updates):
+      self.rand_index = np.random.randint(0, self.n)
+
+      self.index_activation = np.dot(self.weights[self.rand_index, :],
+                                     self.states)
+      
       if self.index_activation < 0:
-        self.state[self.rand_index] = -1
+        self.states[self.rand_index] = -1
       else:
-        self.state[self.rand_index] = 1
+        self.states[self.rand_index] = 1
 
-  def compute_energy(self): 
+  def compute_energy(self):
     """
-    Compute energy.
+    Compute the total energy of the network
     """
 
-    self.energy = -0.5 * np.dot(np.dot(self.state.T, self.weights), self.state)
+    self.energy = -0.5 * np.dot(np.dot(self.states.T, self.weights), self.states)
     self.energies.append(self.energy)
+
