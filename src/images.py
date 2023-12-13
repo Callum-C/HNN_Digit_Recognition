@@ -62,3 +62,30 @@ def read_single_digit(digit, size=50):
 
   return np.array([img_flat])
 
+def add_rng_noise(img, n):
+  """
+  Randomly add noise to a given image.
+
+  A cell is picked at random n times and the state of that cell is flipped.
+
+  Params
+  ------
+  img: np array - A flattened image.
+
+  n: int - Number of times to randomly pick a cell and flip it's state.
+
+  Returns
+  -------
+  img: np array - The original image with added noise.
+  """
+
+  img = np.array(img)
+  print("add_rng_noise - img shape: {}".format(img.shape))
+
+  for i in range(n):
+    rnd_index = np.random.randint(0, img.shape[0])
+    img[rnd_index] = img[rnd_index] * -1
+
+  return img
+
+
