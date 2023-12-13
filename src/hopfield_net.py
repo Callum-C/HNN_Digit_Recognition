@@ -36,8 +36,8 @@ class hopfieldNet:
     """
     Learn the memories / train the network.
     """
-    
-    self.weights = self.memories.T @ self.memories
+
+    self.weights = (1 / self.m) * self.memories.T @ self.memories
     np.fill_diagonal(self.weights, 0)
 
   def update_states(self, n_updates):
