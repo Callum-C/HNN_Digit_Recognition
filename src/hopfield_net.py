@@ -23,8 +23,8 @@ class hopfieldNet:
     # - Square grid so total number of nuerons is n^2
     self.n = self.memories.shape[1]
     self.sqrt_n = int(math.sqrt(self.n))
-
     print("Neurons: {}".format(self.n))
+
     # Construct network
     self.states = np.random.randint(0, 2, (self.n, 1))
     self.states = cv2.normalize(self.states, None, -1, 1.0, cv2.NORM_MINMAX, 
@@ -36,15 +36,9 @@ class hopfieldNet:
     """
     Learn the memories / train the network.
     """
-
-    for memory in self.memories:
-      for i in range(len(memory)):
-        for j in range(len(memory)):
-          if i < j:
-            if memory[i] == memory[j]:
-              self.weights[i][j] += 1
-            else:
-              self.weights[i][j] -= 1
+    
+    self.weights = self.memories.T @ self.memories
+    np.fill_diagonal(self.weights, 0)
 
   def update_states(self, n_updates):
     """

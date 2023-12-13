@@ -6,7 +6,7 @@ from hopfield_net import hopfieldNet
 from images import read_images, read_single_digit
 from graphs import plot_graphs
 
-memories = read_images(3)
+memories = read_images(5)
 #memories = read_single_digit(6, 50)
 
 print("Memories shape: {}".format(memories.shape))
