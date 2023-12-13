@@ -7,14 +7,14 @@ class hopfieldNet:
   Hopfield Neural Network for Digit Recognition.
   """
 
-  def __init__(self, input):
+  def __init__(self, memories, starting_state=[]):
     """
     Construct a Hopfield Neural Network object.
     Set network variables and memories.
     """
 
     # Patterns for network to remember
-    self.memories = np.array(input)
+    self.memories = np.array(memories)
 
     # m = number of memories stored
     self.m = self.memories.shape[0]
@@ -26,7 +26,11 @@ class hopfieldNet:
     print("Neurons: {}".format(self.n))
 
     # Construct network
-    self.states = np.random.randint(0, 2, (self.n, 1))
+    if len(starting_state) == 0:
+      self.states = np.random.randint(0, 2, (self.n, 1))
+    else:
+      self.states = starting_state
+
     self.states = cv2.normalize(self.states, None, -1, 1.0, cv2.NORM_MINMAX, 
                                 dtype=cv2.CV_64F)
     self.weights = np.zeros((self.n, self.n))

@@ -3,16 +3,18 @@ import pygame
 import matplotlib.pyplot as plt
 
 from hopfield_net import hopfieldNet
-from images import read_images, read_single_digit
+from images import read_images, read_single_digit, add_rng_noise
 from graphs import plot_graphs
 
-memories = read_images(5)
-#memories = read_single_digit(6, 50)
+memories = read_images(2)
+# memories = read_single_digit(6, 50)
 
 print("Memories shape: {}".format(memories.shape))
 
+starting_state = add_rng_noise(memories[1], 1000)
+
 # Initalize Hopfield Network
-net = hopfieldNet(memories)
+net = hopfieldNet(memories, starting_state)
 net.train()
 
 # Initalize pygame
