@@ -2,21 +2,26 @@ import os
 import cv2
 import numpy as np
 
-def read_images(number=10):
+def read_images(number=10, size=50):
   """
   Read image files and return numpy array of memories for a HNN.
 
   Params
   ------
   number: int - Number of images to load in, defaults to 10.
+  size: int - Size of images to load, either 28x28, 50x50 or 280x280.
 
   Returns
   -------
   memories: array - Numpy array of images for the network to remember.
   """
+  if size != 28 and size!= 50 and size != 280:
+    print("Size: {} not valid. Please enter 28 or 280.".format(size))
+    return
+
   memories = []
   count = 0
-  for dirname, _, filenames in os.walk('Digits'):
+  for dirname, _, filenames in os.walk('Digits/{}x{}'.format(size, size)):
     for filename in filenames:
       filepath = os.path.join(dirname, filename)
       img = cv2.imread(filepath, 0)
@@ -32,20 +37,24 @@ def read_images(number=10):
 
   return memories
 
-def read_single_digit(digit):
+def read_single_digit(digit, size=50):
   """
   Read and return a single specified digit.
 
   Param
   -----
   digit: int - Number to read and return
+  size: int - Size of images to load, either 28x28, 50x50, or 280x280.
 
   Returns
   -------
   memory: array - Numpy array containing the digit, shape (1, 784)
   """
+  if size != 28 and size!= 50 and size != 280:
+    print("Size: {} not valid. Please enter 28 or 280.".format(size))
+    return
 
-  filepath = "Digits/{}.png".format(str(digit))
+  filepath = "Digits/{}x{}/{}.png".format(size, size, str(digit))
   img = cv2.imread(filepath, 0)
   img_norm = cv2.normalize(img, None, -1, 1.0, cv2.NORM_MINMAX, 
                            dtype=cv2.CV_64F)

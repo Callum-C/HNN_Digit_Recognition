@@ -16,7 +16,7 @@ def plot_graphs(hnn):
   plt.xlabel(
     "Each row / column represents a neuron, and each square a connection"
   )
-  plt.title("784 neurons, 306,936 unique, symmetric connections", fontsize=15)
+  plt.title("Neurons and Their Connections", fontsize=15)
   plt.setp(plt.gcf().get_axes(), xticks=[], yticks=[])
 
   # Plot Energies

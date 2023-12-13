@@ -6,8 +6,8 @@ from hopfield_net import hopfieldNet
 from images import read_images, read_single_digit
 from graphs import plot_graphs
 
-#memories = read_images()
-memories = read_single_digit(1)
+memories = read_images(3)
+#memories = read_single_digit(6, 50)
 
 print("Memories shape: {}".format(memories.shape))
 
@@ -54,7 +54,7 @@ def main_loop():
       pygame.draw.rect(surface, col, (r*cellsize, c*cellsize, cellsize, cellsize))
 
     # Update network states
-    net.update_states(16)
+    net.update_states(32)
     net.compute_energy()
     pygame.display.update()
     if pause_at_start:
