@@ -1,5 +1,6 @@
 import numpy as np
 import cv2
+import math
 
 class hopfieldNet:
   """
@@ -21,7 +22,9 @@ class hopfieldNet:
     # n = number of neurons in a row
     # - Square grid so total number of nuerons is n^2
     self.n = self.memories.shape[1]
+    self.sqrt_n = int(math.sqrt(self.n))
 
+    print("Neurons: {}".format(self.n))
     # Construct network
     self.states = np.random.randint(0, 2, (self.n, 1))
     self.states = cv2.normalize(self.states, None, -1, 1.0, cv2.NORM_MINMAX, 

@@ -1,13 +1,13 @@
 import numpy as np
-import matplotlib.pyplot as plt
-import cv2
 import pygame
+import matplotlib.pyplot as plt
 
 from hopfield_net import hopfieldNet
 from images import read_images, read_single_digit
+from graphs import plot_graphs
 
 #memories = read_images()
-memories = read_single_digit(4)
+memories = read_single_digit(1)
 
 print("Memories shape: {}".format(memories.shape))
 
@@ -18,7 +18,7 @@ net.train()
 # Initalize pygame
 cellsize = 20
 pygame.init()
-surface = pygame.display.set_mode((28*cellsize, 28*cellsize))
+surface = pygame.display.set_mode((net.sqrt_n*cellsize, net.sqrt_n*cellsize))
 pygame.display.set_caption("  ")
 
 def main_loop():
@@ -34,12 +34,12 @@ def main_loop():
       if event.type == pygame.QUIT:
         running = False
 
-        # TODO Draw Graphs
+        plot_graphs(net)
 
         pygame.quit()
         return
     
-    cells = net.states.reshape(28, 28).T
+    cells = net.states.reshape(net.sqrt_n, net.sqrt_n).T
 
     surface.fill((211, 211, 211))
 
@@ -58,10 +58,9 @@ def main_loop():
     net.compute_energy()
     pygame.display.update()
     if pause_at_start:
-      pygame.time.wait(2000)
+      pygame.time.wait(1500)
       pause_at_start = False
 
 main_loop()
-print(net.energies)
-print(net.weights)
+plt.show()
 
