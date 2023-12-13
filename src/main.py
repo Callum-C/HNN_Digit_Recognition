@@ -4,9 +4,10 @@ import cv2
 import pygame
 
 from hopfield_net import hopfieldNet
-from images import read_images
+from images import read_images, read_single_digit
 
-memories = read_images()
+#memories = read_images()
+memories = read_single_digit(4)
 
 print("Memories shape: {}".format(memories.shape))
 
