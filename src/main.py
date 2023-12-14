@@ -1,102 +1,66 @@
 import numpy as np
-import matplotlib.pyplot as plt
-import cv2
 import pygame
-import copy
+import matplotlib.pyplot as plt
 
 from hopfield_net import hopfieldNet
+from images import read_images, read_single_digit, add_rng_noise
+from graphs import plot_graphs
 
-def Test_Hopfield():
+memories = read_images(2)
+# memories = read_single_digit(6, 50)
+
+starting_state = add_rng_noise(memories[1], 1000)
+
+# Initalize Hopfield Network
+net = hopfieldNet(memories, starting_state)
+net.train()
+
+# Initalize pygame
+cellsize = 20
+pygame.init()
+surface = pygame.display.set_mode((net.sqrt_n*cellsize, net.sqrt_n*cellsize))
+pygame.display.set_caption("  ")
+
+def main_loop():
   """
-  Test out the Hopfield_Network object on some 8-bit styled numbers.
+  Randomly update nodes' states and animate change using pygame.
   """
+  pause_at_start = True
+  running = True
 
-  fnames = ['Digits/2.png', 'Digits/0.png']
-  images = []
-  images_flat = []
-  for fname in fnames:
-    img = cv2.imread(fname, 0)
-    img_norm = cv2.normalize(img, None, -1, 1.0, cv2.NORM_MINMAX, dtype=cv2.CV_32F)
-    images.append(copy.deepcopy(img_norm))
-    img_norm = np.array(img_norm).flatten()
-    images_flat.append(img_norm)
-
-  # Snag a memory from computer brain
-  memories = np.array(images)
-  
-  # Initalize Hopfield object
-  H_Net = hopfieldNet(memories, images)
-  H_Net.network_learning()
-
-  # Draw it all out, updating board each update iteration
-  cellsize = 20
-
-  # Initialize pygame
-  pygame.init()
-  # set dimensions of board and cellsize - 28 x 28 ~ display surface
-  surface = pygame.display.set_mode((28*cellsize, 28*cellsize))
-  pygame.display.set_caption("  ")
-
-  # Kill pygame if user exits window
-  Running = True
-  # Main animation loop
-  while Running:
+  # Main Animation Loop
+  while running:
     for event in pygame.event.get():
       if event.type == pygame.QUIT:
-        Running = False
+        running = False
 
-        # Plot Weights matrix
-        plt.figure("weights", figsize=(10,7))
-        plt.imshow(H_Net.weights,cmap='RdPu') 
-        plt.xlabel("Each row/column represents a neuron, each square a connection")
+        plot_graphs(net)
 
-        plt.title(" 4096 Neurons - 16,777,216 unique connections",fontsize=15)
-        plt.setp(plt.gcf().get_axes(), xticks=[], yticks=[])
-
-        # Plot energies
-        plt.figure("Energy",figsize=(10,7))
-        x = np.arange(len(H_Net.energies))
-        plt.scatter(x,np.array(H_Net.energies),s=1,color='red')
-        plt.xlabel("Generation")
-        plt.ylabel("Energy")
-        plt.title("Network Energy over Successive Generations",fontsize=15)
-        plt.setp(plt.gcf().get_axes(), xticks=[], yticks=[])
-
-        # quit pygame
         pygame.quit()
         return
+    
+    cells = net.states.reshape(net.sqrt_n, net.sqrt_n).T
 
-    cells = H_Net.state.reshape(28,28).T
-
-    # Fills surface with colour
     surface.fill((211, 211, 211))
 
-    # Loop through network state array and update colours for each cell
-    for r, c in np.ndindex(cells.shape): # Iterates through all cells in cells matrix
+    # Loop through network states and update colours for each cell
+    for r, c in np.ndindex(cells.shape):
       if cells[r, c] == -1:
-        col = (135, 206, 250)
+        col = (0, 0, 0)
 
       elif cells[r, c] == 1:
-        col = (0, 0, 128)
+        col = (255, 255, 255)
 
-      else:
-        col = (255, 140, 0)
-      
-      pygame.draw.rect(surface, col, (r*cellsize, c*cellsize, 
-                                      cellsize, cellsize))
-      
-    # Update network state
-    H_Net.update_network_state(16)
-    H_Net.compute_energy()
-    pygame.display.update() # Updates display from new .draw in update function
-    # pygame.time.wait(50)
+      pygame.draw.rect(surface, col, (r*cellsize, c*cellsize, cellsize, cellsize))
 
+    # Update network states
+    net.update_states(32)
+    net.compute_energy()
+    pygame.display.update()
+    if pause_at_start:
+      pygame.time.wait(1500)
+      pause_at_start = False
 
-Test_Hopfield()
+main_loop()
 plt.show()
-
-      
-
-
-
 

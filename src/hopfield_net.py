@@ -1,82 +1,69 @@
 import numpy as np
+import cv2
+import math
 
-class hopfieldNet: 
+class hopfieldNet:
   """
-  Hopfield Neural Network class.
+  Hopfield Neural Network for Digit Recognition.
   """
 
-  def __init__(self, input, images):
+  def __init__(self, memories, starting_state=[]):
     """
-    Initialize a Hopfield Neural Network object.
-    Set network variables and memory.
+    Construct a Hopfield Neural Network object.
+    Set network variables and memories.
     """
 
-    # Patterns for network training / retrieval
-    self.memory = np.array(input)
+    # Patterns for network to remember
+    self.memories = np.array(memories)
 
-    self.n = self.memory.shape[1] # Image size: (28x28)
+    # m = number of memories stored
+    self.m = self.memories.shape[0]
+
+    # n = number of neurons in a row
+    # - Square grid so total number of nuerons is n^2
+    self.n = self.memories.shape[1]
+    self.sqrt_n = int(math.sqrt(self.n))
 
     # Construct network
-    # - Initialize State vector
-    img_index = np.random.randint(0, self.memory.shape[0])
-    img = images[img_index]
-    
-    (row, col) = (28, 28)
+    if len(starting_state) == 0:
+      self.states = np.random.randint(0, 2, (self.n, 1))
+    else:
+      self.states = starting_state
 
-    number_of_pixels = np.random.randint(50, 200)
-    for i in range(number_of_pixels):
-      y_coord = np.random.randint(0, row-1)
-      x_coord = np.random.randint(0, col-1)
-
-      img[y_coord][x_coord] = 1.0
-
-    number_of_pixels = np.random.randint(50, 200)
-    for i in range(number_of_pixels):
-      y_coord = np.random.randint(0, row-1)
-      x_coord = np.random.randint(0, col-1)
-
-      img[y_coord][x_coord] = -1.0
-
-    self.state = np.array(img).flatten()
-
-    # - Initialize Weight vector
+    self.states = cv2.normalize(self.states, None, -1, 1.0, cv2.NORM_MINMAX, 
+                                dtype=cv2.CV_64F)
     self.weights = np.zeros((self.n, self.n))
+    self.energies = []
 
-    # - Initialize Energies
-    self.energies = [] # container for tracking of energy
-
-  def network_learning(self): 
+  def train(self):
     """
-    Learn the pattern / patterns.
+    Learn the memories / train the network.
     """
 
-    # hebbian learning
-    self.weights = (1 / self.memory.shape[0]) * self.memory.T @ self.memory
+    self.weights = (1 / self.m) * self.memories.T @ self.memories
     np.fill_diagonal(self.weights, 0)
 
-  
-  def update_network_state(self, n_update):
+  def update_states(self, n_updates):
     """
-    Update Network.
+    Pick random neurons n_updates times and update their state.
     """
 
-    # update n neurons randomly
-    for neuron in range(n_update): 
-      # pick random neuron in the state vector
-      self.rand_index = np.random.randint(0, self.n) 
-      # Compute activation for randomly indexed neuron
-      self.index_activation = np.dot(self.weights[self.rand_index, :], 
-                                     self.state)
-      # threshold function for binary state change
+    for neuron in range(n_updates):
+      self.rand_index = np.random.randint(0, self.n)
+
+      self.index_activation = np.dot(self.weights[self.rand_index, :],
+                                     self.states)
+      
       if self.index_activation < 0:
-        self.state[self.rand_index] = -1
+        self.states[self.rand_index] = -1
       else:
-        self.state[self.rand_index] = 1
+        self.states[self.rand_index] = 1
 
-  def compute_energy(self): 
+  def compute_energy(self):
     """
-    Compute energy.
+    Compute the total energy of the network
     """
 
-    self.energy = -0.5 * np.dot(np.dot(self.state.T, self.weights), self.state)
+    self.energy = -0.5 * np.dot(np.dot(self.states.T, self.weights), self.states)
     self.energies.append(self.energy)
+
