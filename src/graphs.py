@@ -17,7 +17,6 @@ def plot_graphs(hnn):
     "Each row / column represents a neuron, and each square a connection"
   )
   plt.title("Neurons and Their Connections", fontsize=15)
-  plt.setp(plt.gcf().get_axes(), xticks=[], yticks=[])
 
   # Plot Energies
   plt.figure("Energy", figsize=(10, 7))
@@ -26,4 +25,3 @@ def plot_graphs(hnn):
   plt.xlabel("Generation")
   plt.ylabel("Energy")
   plt.title("Network Energy over Successive Generations", fontsize=15)
-  plt.setp(plt.gcf().get_axes(), xticks=[], yticks=[])

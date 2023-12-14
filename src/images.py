@@ -15,8 +15,7 @@ def read_images(number=10, size=50):
   -------
   memories: array - Numpy array of images for the network to remember.
   """
-  if size != 28 and size!= 50 and size != 280:
-    print("Size: {} not valid. Please enter 28 or 280.".format(size))
+  if not check_image_size(size):
     return
 
   memories = []
@@ -50,8 +49,7 @@ def read_single_digit(digit, size=50):
   -------
   memory: array - Numpy array containing the digit, shape (1, 784)
   """
-  if size != 28 and size!= 50 and size != 280:
-    print("Size: {} not valid. Please enter 28 or 280.".format(size))
+  if not check_image_size(size):
     return
 
   filepath = "Digits/{}x{}/{}.png".format(size, size, str(digit))
@@ -61,6 +59,55 @@ def read_single_digit(digit, size=50):
   img_flat = np.array(img_norm).flatten()
 
   return np.array([img_flat])
+
+def read_odd_digits(number=4, size=50):
+  """
+  Read in only the odd numbers - 1, 3, 5, 7, 9.
+  The theory being the odd digits should use a wider range of cells.
+  - Avoiding memories of the 0 and 2 digits overlapping.
+
+  Params
+  ------
+  number: int - Amount of digits to read in: 1 - 5.
+  size: int - Size of images to load, either 28x28, 50x50, or 280x280.
+
+
+  Returns
+  -------
+  memories: array - Numpy array of images for the network to remember.
+  """
+
+  if not check_image_size(size):
+    return
+  
+  if not (1 <= number <= 5):
+    print(
+      "Number: {} is out of range. Please enter a value between 1 and 5."
+      .format(number)
+    )
+    return
+  
+  memories = []
+  count = 0
+  for dirname, _, filenames in os.walk('Digits/{}x{}'.format(size, size)):
+    for i, filename in enumerate(filenames):
+      if (i % 2) == 1:
+        filepath = os.path.join(dirname, filename)
+        img = cv2.imread(filepath, 0)
+        img_norm = cv2.normalize(img, None, -1, 1.0, cv2.NORM_MINMAX, 
+                                dtype=cv2.CV_64F)
+        img_flat = np.array(img_norm).flatten()
+        memories.append(img_flat)
+
+        count += 1
+        if count >= number:
+          break
+
+  memories = np.array(memories)
+
+  return memories
+
+
 
 def add_rng_noise(img, n):
   """
@@ -86,5 +133,25 @@ def add_rng_noise(img, n):
     img[rnd_index] = img[rnd_index] * -1
 
   return img
+
+def check_image_size(size):
+  """
+  Check size of images is valid.
+
+  Params
+  ------
+  size: int - The size of desired images.
+
+  Returns
+  -------
+  boolean - True if image size is valid, false if invalid.
+  """
+
+  if size != 28 and size!= 50 and size != 280:
+    print("\ncheck_image_size - Image size: {} is invalid.".format(size) +
+          " Please enter either 28, 50, or 280.\n")
+    return False
+  else:
+    return True
 
 
