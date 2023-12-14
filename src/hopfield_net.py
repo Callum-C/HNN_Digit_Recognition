@@ -23,7 +23,6 @@ class hopfieldNet:
     # - Square grid so total number of nuerons is n^2
     self.n = self.memories.shape[1]
     self.sqrt_n = int(math.sqrt(self.n))
-    print("Neurons: {}".format(self.n))
 
     # Construct network
     if len(starting_state) == 0:

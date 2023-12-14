@@ -80,7 +80,6 @@ def add_rng_noise(img, n):
   """
 
   img = np.array(img)
-  print("add_rng_noise - img shape: {}".format(img.shape))
 
   for i in range(n):
     rnd_index = np.random.randint(0, img.shape[0])

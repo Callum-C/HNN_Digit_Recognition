@@ -9,8 +9,6 @@ from graphs import plot_graphs
 memories = read_images(2)
 # memories = read_single_digit(6, 50)
 
-print("Memories shape: {}".format(memories.shape))
-
 starting_state = add_rng_noise(memories[1], 1000)
 
 # Initalize Hopfield Network
