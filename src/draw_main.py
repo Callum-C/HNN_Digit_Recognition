@@ -6,12 +6,7 @@ Utilise pygame to allow users to draw digits for the HNN to recognise.
 
 import numpy as np
 import pygame
-import matplotlib.pyplot as plt
 import math
-
-from hopfield_net import hopfieldNet
-from images import *
-from graphs import plot_graphs
 
 """
 
@@ -34,8 +29,8 @@ def main_loop(cells):
   """
   
   Main loop for drawing to the canvas.
-  Left click to draw on the canvas.
-  Right click to clear the canvas.
+  - Left click to draw on the canvas.
+  - Right click to clear the canvas.
 
   """
 
@@ -45,7 +40,6 @@ def main_loop(cells):
     for event in pygame.event.get():
       if event.type == pygame.QUIT:
         running = False
-
         pygame.quit()
         return
     
@@ -53,16 +47,16 @@ def main_loop(cells):
     cur = pygame.mouse.get_pos()
     click = pygame.mouse.get_pressed()
 
+    # Clear surface when right click pressed
     if click[2]:
-      # Clear surface when right click pressed
       surface.fill((255,255,255))
       cells = np.zeros((image_size, image_size))
 
     update_cells(cur, click, cells)
     
     # Draw user input to display
-    # draw(cur, click)
-    draw_cells(cells)
+    # draw(cur, click) # - Draw exact mouse position on canvas in blue
+    draw_cells(cells) # - Draw cells to canvas in black
       
     
 def update_cells(cur, click, cells):
@@ -101,7 +95,9 @@ def draw_cells(cells):
   for i,row in enumerate(cells):
     for j,cell in enumerate(row):
       if cell == 1:
-        pygame.draw.rect(surface, (0,0,0), (i*cellsize, j*cellsize, cellsize, cellsize))
+        pygame.draw.rect(
+          surface, (0,0,0), (i*cellsize, j*cellsize, cellsize, cellsize)
+        )
   
   pygame.display.update()
 
