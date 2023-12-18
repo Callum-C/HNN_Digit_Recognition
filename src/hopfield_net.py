@@ -35,13 +35,41 @@ class hopfieldNet:
     self.weights = np.zeros((self.n, self.n))
     self.energies = []
 
-  def train(self):
+  def train_hebbian(self):
     """
     Learn the memories / train the network.
+    - Uses Hebbian learning
     """
 
     self.weights = (1 / self.m) * self.memories.T @ self.memories
     np.fill_diagonal(self.weights, 0)
+
+  def train_storkey(self):
+    """
+    Learn the memories / train the network.
+    - Uses the Storkey training method
+    """
+
+    for memory in self.memories:
+      old_weights = self.weights.copy()
+      hebbian_term = np.outer(memory, memory)
+
+      net_inputs = old_weights.dot(memory)
+      net_inputs = np.tile(net_inputs, (self.n, 1))
+
+      h_i = np.diagonal(old_weights) * memory
+      h_i = h_i[:, np.newaxis]
+
+      h_j = old_weights * memory
+      np.fill_diagonal(h_j, 0)
+
+      hij = net_inputs - h_i - h_j
+
+      post_synaptic = hij * memory
+      pre_synaptic = hij.T * memory[:, np.newaxis]
+
+      self.weights = old_weights + (1./self.n) * (hebbian_term - pre_synaptic - post_synaptic)
+
 
   def update_states(self, n_updates):
     """

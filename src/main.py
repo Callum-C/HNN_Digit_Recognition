@@ -17,11 +17,11 @@ image_size = 50
 
 # Number of images to learn 1 - 10
 # If single_digit method used, this is the digit to learn
-number_of_memories = 3 
+number_of_memories = 3
 
 # Of those images learned, which one should be tested
 # - Number should be positive integer but lower than number of memories
-recreate_memory = 1  
+recreate_memory = 2
 
 # Noise to add to the recreated memory / test image - integer
 amount_of_noise = int((image_size * image_size) / 4)  
@@ -30,7 +30,7 @@ amount_of_noise = int((image_size * image_size) / 4)
 pause_at_start = False
 
 # Show energy and weight graphs after simulation? 
-show_graphs = False 
+show_graphs = False
 
 """
 
@@ -51,7 +51,8 @@ starting_state = add_rng_noise(memories[recreate_memory], amount_of_noise)
 
 # Initalise Hopfield Network
 net = hopfieldNet(memories, starting_state)
-net.train()
+# net.train_hebbian()
+net.train_storkey()
 
 # Initalise pygame
 cellsize = 20
