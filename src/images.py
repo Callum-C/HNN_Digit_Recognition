@@ -23,11 +23,10 @@ def read_images(number=10, size=50):
   for dirname, _, filenames in os.walk('Digits/{}x{}'.format(size, size)):
     for filename in filenames:
       filepath = os.path.join(dirname, filename)
-      img = cv2.imread(filepath, 0)
-      img_norm = cv2.normalize(img, None, -1, 1.0, cv2.NORM_MINMAX, 
-                               dtype=cv2.CV_64F)
-      img_flat = np.array(img_norm).flatten()
-      memories.append(img_flat)
+      
+      image = process_image(filepath)
+
+      memories.append(image)
       count += 1
       if count >= number:
         break
@@ -53,12 +52,10 @@ def read_single_digit(digit, size=50):
     return
 
   filepath = "Digits/{}x{}/{}.png".format(size, size, str(digit))
-  img = cv2.imread(filepath, 0)
-  img_norm = cv2.normalize(img, None, -1, 1.0, cv2.NORM_MINMAX, 
-                           dtype=cv2.CV_64F)
-  img_flat = np.array(img_norm).flatten()
+  
+  image = process_image(filepath)
 
-  return np.array([img_flat])
+  return np.array([image])
 
 def read_odd_digits(number=4, size=50):
   """
@@ -93,11 +90,10 @@ def read_odd_digits(number=4, size=50):
     for i, filename in enumerate(filenames):
       if (i % 2) == 1:
         filepath = os.path.join(dirname, filename)
-        img = cv2.imread(filepath, 0)
-        img_norm = cv2.normalize(img, None, -1, 1.0, cv2.NORM_MINMAX, 
-                                dtype=cv2.CV_64F)
-        img_flat = np.array(img_norm).flatten()
-        memories.append(img_flat)
+
+        image = process_image(filepath)
+
+        memories.append(image)
 
         count += 1
         if count >= number:
@@ -106,6 +102,34 @@ def read_odd_digits(number=4, size=50):
   memories = np.array(memories)
 
   return memories
+
+
+def process_image(filepath):
+  """
+  Read, normalise and flatten image from filepath.
+
+  Params
+  ------
+  filepath: string - location of image to read.
+
+  Returns
+  -------
+  image: numpy array - 1D flattened image, with unique values of +1 and -1.
+  """
+
+  img = cv2.imread(filepath, 0)
+  img_norm = cv2.normalize(img, None, -1, 1.0, cv2.NORM_MINMAX, 
+                          dtype=cv2.CV_64F)
+  img_flat = np.array(img_norm).flatten()
+
+  img_flat[img_flat <= 0] = -1
+  img_flat[img_flat > 0] = 1
+
+  if np.unique(img_flat).shape != (2,):
+    print("\nprocess_image error: unique(image) shape does NOT match.")
+    print("image unique values: {}\n".format(np.unique(img_flat)))
+
+  return img_flat
 
 
 
