@@ -19,8 +19,8 @@ class hopfieldNet:
     # m = number of memories stored
     self.m = self.memories.shape[0]
 
-    # n = number of neurons in a row
-    # - Square grid so total number of nuerons is n^2
+    # n = total number of neurons
+    # sqrt_n = number of neurons in a row when image is not flattened
     self.n = self.memories.shape[1]
     self.sqrt_n = int(math.sqrt(self.n))
 
@@ -69,6 +69,17 @@ class hopfieldNet:
       pre_synaptic = hij.T * memory[:, np.newaxis]
 
       self.weights = old_weights + (1./self.n) * (hebbian_term - pre_synaptic - post_synaptic)
+
+  def storkey_test(self):
+    """
+    Coming up with my own code for the storkey rule.
+
+    - Start by assuming only one memory in self.memories.
+    - Start with a 2D image (not flattened) to preserve local information.
+    """
+
+    memory = self.memories[0].reshape(self.sqrt_n, self.sqrt_n)
+    
 
 
   def update_states(self, n_updates):

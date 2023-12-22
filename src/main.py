@@ -3,8 +3,11 @@ import pygame
 import matplotlib.pyplot as plt
 
 from hopfield_net import hopfieldNet
-from images import *
+from images import (
+  read_images, read_odd_digits, read_single_digit, add_rng_noise
+)
 from graphs import plot_graphs
+from utilities import calc_hamming_distance, sort_hamming_distances
 
 """
 
@@ -17,11 +20,11 @@ image_size = 50
 
 # Number of images to learn 1 - 10
 # If single_digit method used, this is the digit to learn
-number_of_memories = 3
+number_of_memories = 9
 
 # Of those images learned, which one should be tested
 # - Number should be positive integer but lower than number of memories
-recreate_memory = 2
+recreate_memory = 0
 
 # Noise to add to the recreated memory / test image - integer
 amount_of_noise = int((image_size * image_size) / 4)  
@@ -45,14 +48,16 @@ memories = read_images(number_of_memories, image_size)
 #memories = read_single_digit(number_of_memories, image_size)
 
 print("Memories shape: {}".format(memories.shape))
+print(sort_hamming_distances(calc_hamming_distance(memories)))
 
 # Set starting state
 starting_state = add_rng_noise(memories[recreate_memory], amount_of_noise)
 
 # Initalise Hopfield Network
 net = hopfieldNet(memories, starting_state)
-# net.train_hebbian()
+#net.train_hebbian()
 net.train_storkey()
+#net.storkey_test()
 
 # Initalise pygame
 cellsize = 20
