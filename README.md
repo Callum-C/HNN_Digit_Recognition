@@ -7,9 +7,12 @@ The network excels at recognising digits it has learned so long as the number it
 
 The network is capable of recalling one of two memories even if the pattern is severely noisy or corrupted.
 
+![Recall-4-425](https://github.com/Callum-C/HNN_Digit_Recognition/assets/60474698/92987b7e-5cdf-494d-a46a-ae7f51f1e7f4)  ![Recall-7-425](https://github.com/Callum-C/HNN_Digit_Recognition/assets/60474698/91ce3d4e-8260-46f5-b2a0-00f781d68176)
+
 Due to the extreme similarity between all the digits, spurious minima occur when the network has learned 3 or more digits.
 
 This is even the case when the 3 most dis-similar digits are learned, despite the network having a theorised capacity of 375 patterns / memories.
+
 
 ## Dataset
 Typically, this application is tested on the MNIST dataset of digits.
@@ -57,6 +60,16 @@ Increasing the number of neurons in the network, theoretically should improve th
 However, it is very likely this would only work if the digits were different colours.
 As the 0, 6 and 8 are the closest digits, it is likely an improvement could occur if the 0 was all red, the 6 all blue, and the 8 all green.
 However, this would mean the input would have to be the same colour, otherwise it is unlikely the network would find the correct minima.
+
+## Results
+### Spurious Minima - Hebbian Training Method
+![Spurious-Hebbian-0](https://github.com/Callum-C/HNN_Digit_Recognition/assets/60474698/45ede62d-20ab-443e-b8ed-aea611ebe709)  ![Spurious-Hebbian-4](https://github.com/Callum-C/HNN_Digit_Recognition/assets/60474698/020172f2-8252-4a07-b8bb-a289970b58b9)  ![Spurious-Hebbian-7](https://github.com/Callum-C/HNN_Digit_Recognition/assets/60474698/fd6b7c9d-1d59-4ba8-8297-3a9fdf55c289)
+
+
+### Spurious Minima - Storkey Training Method
+![Spurious-Storkey-0](https://github.com/Callum-C/HNN_Digit_Recognition/assets/60474698/6d68355c-2e56-4075-b605-b72e3a673188)  ![Spurious-Storkey-4](https://github.com/Callum-C/HNN_Digit_Recognition/assets/60474698/35aab213-bd18-48d5-a6ff-db4ffbcb76b0)  ![Spurious-Storkey-7](https://github.com/Callum-C/HNN_Digit_Recognition/assets/60474698/601fb250-804b-4d0a-a67d-9672a68c2887)
+
+
 
 ## Further Reading
 Inspired by https://towardsdatascience.com/hopfield-networks-neural-memory-machines-4c94be821073
