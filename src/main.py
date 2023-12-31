@@ -3,29 +3,75 @@ import pygame
 import matplotlib.pyplot as plt
 
 from hopfield_net import hopfieldNet
-from images import read_images, read_single_digit, add_rng_noise
+from images import (
+  read_images, read_odd_digits, read_single_digit, add_rng_noise,
+  read_given_digits
+)
 from graphs import plot_graphs
+from utilities import find_optimal_group
 
-memories = read_images(2)
-# memories = read_single_digit(6, 50)
 
-starting_state = add_rng_noise(memories[1], 1000)
+"""
 
-# Initalize Hopfield Network
+Simulation settings
+
+"""
+
+# (image_size, image-size) - 28, 50 or 280
+image_size = 50 
+
+# Number of images to learn 1 - 10
+# If single_digit method used, this is the digit to learn
+number_of_memories = 3
+
+# Of those images learned, which one should be tested
+# - Number should be positive integer but lower than number of memories
+recreate_memory = 2
+
+# Noise to add to the recreated memory / test image - integer
+amount_of_noise = int((image_size * image_size) / 4)  
+
+# Should simulation pause at the start to show starting_state?
+pause_at_start = False
+
+# Show energy and weight graphs after simulation? 
+show_graphs = True
+
+"""
+
+Main Code
+
+"""
+
+# Memory selection method
+
+memories = read_images(number_of_memories, image_size)
+#memories = read_given_digits([0, 4, 7], image_size)
+
+#memories = find_optimal_group(memories, 3)  # Optimal digits - 0, 4, 7
+
+print("Memories shape: {}".format(memories.shape))
+
+# Set starting state
+starting_state = add_rng_noise(memories[recreate_memory], amount_of_noise)
+
+# Initalise Hopfield Network
 net = hopfieldNet(memories, starting_state)
-net.train()
 
-# Initalize pygame
+# Train the network
+net.train_hebbian()
+#net.train_storkey()
+
+# Initalise pygame
 cellsize = 20
 pygame.init()
 surface = pygame.display.set_mode((net.sqrt_n*cellsize, net.sqrt_n*cellsize))
 pygame.display.set_caption("  ")
 
-def main_loop():
+def main_loop(pause_at_start=True):
   """
   Randomly update nodes' states and animate change using pygame.
   """
-  pause_at_start = True
   running = True
 
   # Main Animation Loop
@@ -34,7 +80,8 @@ def main_loop():
       if event.type == pygame.QUIT:
         running = False
 
-        plot_graphs(net)
+        if show_graphs:
+          plot_graphs(net)
 
         pygame.quit()
         return
@@ -51,7 +98,9 @@ def main_loop():
       elif cells[r, c] == 1:
         col = (255, 255, 255)
 
-      pygame.draw.rect(surface, col, (r*cellsize, c*cellsize, cellsize, cellsize))
+      pygame.draw.rect(
+        surface, col, (r*cellsize, c*cellsize, cellsize, cellsize)
+      )
 
     # Update network states
     net.update_states(32)
@@ -61,6 +110,6 @@ def main_loop():
       pygame.time.wait(1500)
       pause_at_start = False
 
-main_loop()
+main_loop(pause_at_start)
 plt.show()
 
