@@ -4,9 +4,10 @@ Utilising Hopfield Neural Networks to recognise digits 0 - 9.
 A network is initialised and trained on a subset of the 10 available digits.
 
 The network excels at recognising digits it has learned so long as the number it has "memorised" is no more than 2.
-![Recalling_4](https://github.com/Callum-C/HNN_Digit_Recognition/assets/60474698/86fa4a74-08f4-4561-a910-f5e9d7ca87eb)
 
 The network is capable of recalling one of two memories even if the pattern is severely noisy or corrupted.
+![Recall-4](https://github.com/Callum-C/HNN_Digit_Recognition/assets/60474698/2fa6cc7d-9db4-4763-bfe6-a180be0c8dc6)
+![Recall-7](https://github.com/Callum-C/HNN_Digit_Recognition/assets/60474698/9bbeb13e-c6d3-4af5-902e-6c1bf8345d19)
 
 Due to the extreme similarity between all the digits, spurious minima occur when the network has learned 3 or more digits.
 
