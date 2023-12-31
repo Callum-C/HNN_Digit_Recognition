@@ -35,6 +35,7 @@ def read_images(number=10, size=50):
 
   return memories
 
+
 def read_single_digit(digit, size=50):
   """
   Read and return a single specified digit.
@@ -56,6 +57,7 @@ def read_single_digit(digit, size=50):
   image = process_image(filepath)
 
   return np.array([image])
+
 
 def read_odd_digits(number=4, size=50):
   """
@@ -103,6 +105,7 @@ def read_odd_digits(number=4, size=50):
 
   return memories
 
+
 def read_given_digits(digits, size=50):
   """
   
@@ -131,10 +134,8 @@ def read_given_digits(digits, size=50):
     memories.append(image)
 
   memories = np.array(memories)
-  
+
   return memories
-
-
 
 
 def process_image(filepath):
@@ -165,7 +166,6 @@ def process_image(filepath):
   return img_flat
 
 
-
 def add_rng_noise(img, n):
   """
   Randomly add noise to a given image.
@@ -191,6 +191,7 @@ def add_rng_noise(img, n):
 
   return img
 
+
 def check_image_size(size):
   """
   Check size of images is valid.
@@ -210,5 +211,3 @@ def check_image_size(size):
     return False
   else:
     return True
-
-

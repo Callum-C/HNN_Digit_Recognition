@@ -35,6 +35,7 @@ class hopfieldNet:
     self.weights = np.zeros((self.n, self.n))
     self.energies = []
 
+
   def train_hebbian(self):
     """
     Learn the memories / train the network.
@@ -43,6 +44,7 @@ class hopfieldNet:
 
     self.weights = (1 / self.m) * self.memories.T @ self.memories
     np.fill_diagonal(self.weights, 0)
+
 
   def train_storkey(self):
     """
@@ -70,36 +72,6 @@ class hopfieldNet:
 
       self.weights = old_weights + (1./self.n) * (hebbian_term - pre_synaptic - post_synaptic)
 
-  def storkey_test(self):
-    """
-    Coming up with my own code for the storkey rule.
-
-    - Start by assuming only one memory in self.memories.
-    - Start with a 2D image (not flattened) to preserve local information.
-    """
-
-    print("Beginning Training")
-
-    weights = np.zeros((self.n, self.n))
-
-    for pattern in self.memories:
-      outer = np.outer(pattern, pattern.T)
-      np.fill_diagonal(outer, 0)
-      weights += outer
-
-    print("Initial Loop finished")
-    weights = weights / self.n
-
-    for pattern in self.memories:
-      for j in range(self.n):
-        for k in range(self.n):
-          if j != k:
-            weights[j, k] -= pattern[j] * pattern[k]
-            weights[j, k] += pattern[j] * np.dot(weights[j], pattern)
-            weights[j, k] += pattern[k] * np.dot(weights[k], pattern)
-
-    self.weights = weights
-    print("Training Finished")
 
   def update_states(self, n_updates):
     """
@@ -117,6 +89,7 @@ class hopfieldNet:
       else:
         self.states[self.rand_index] = 1
 
+
   def compute_energy(self):
     """
     Compute the total energy of the network
@@ -124,4 +97,3 @@ class hopfieldNet:
 
     self.energy = -0.5 * np.dot(np.dot(self.states.T, self.weights), self.states)
     self.energies.append(self.energy)
-

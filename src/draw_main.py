@@ -71,7 +71,6 @@ def update_cells(cur, click, cells):
     cells[c][r] = 1
 
 
-
 def draw(cur, click):
   """
   

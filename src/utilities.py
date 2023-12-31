@@ -51,6 +51,7 @@ def calc_hamming_distance(arrays):
 
   return distances
 
+
 def calc_group_distance(group):
   """
   
@@ -72,6 +73,7 @@ def calc_group_distance(group):
         distance += hamming_distance(first, second)
 
   return distance
+
 
 def find_optimal_group(arrays):
   """
@@ -137,4 +139,3 @@ def sort_hamming_distances(distances):
     distance_tuple, key=lambda tup: tup[2], reverse=True
   )
   return sorted_distances
-
