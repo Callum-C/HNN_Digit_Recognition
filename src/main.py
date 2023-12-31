@@ -26,16 +26,16 @@ number_of_memories = 3
 
 # Of those images learned, which one should be tested
 # - Number should be positive integer but lower than number of memories
-recreate_memory = 2
+recreate_memory = 1
 
 # Noise to add to the recreated memory / test image - integer
 amount_of_noise = int((image_size * image_size) / 4)  
 
 # Should simulation pause at the start to show starting_state?
-pause_at_start = False
+pause_at_start = True
 
 # Show energy and weight graphs after simulation? 
-show_graphs = True
+show_graphs = False
 
 """
 
@@ -45,8 +45,8 @@ Main Code
 
 # Memory selection method
 
-memories = read_images(number_of_memories, image_size)
-#memories = read_given_digits([0, 4, 7], image_size)
+#memories = read_images(number_of_memories, image_size)
+memories = read_given_digits([0, 4, 7], image_size)
 
 #memories = find_optimal_group(memories, 3)  # Optimal digits - 0, 4, 7
 
@@ -59,8 +59,8 @@ starting_state = add_rng_noise(memories[recreate_memory], amount_of_noise)
 net = hopfieldNet(memories, starting_state)
 
 # Train the network
-net.train_hebbian()
-#net.train_storkey()
+#net.train_hebbian()
+net.train_storkey()
 
 # Initalise pygame
 cellsize = 20
@@ -107,7 +107,7 @@ def main_loop(pause_at_start=True):
     net.compute_energy()
     pygame.display.update()
     if pause_at_start:
-      pygame.time.wait(1500)
+      pygame.time.wait(3000)
       pause_at_start = False
 
 main_loop(pause_at_start)
