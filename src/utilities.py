@@ -51,6 +51,68 @@ def calc_hamming_distance(arrays):
 
   return distances
 
+def calc_group_distance(group):
+  """
+  
+  Calculate the hamming distance between all arrays in the group.
+
+  Params
+  ------
+  group: array of binary strings to compare.
+
+  Returns
+  -------
+  distance: float - Distance between all strings.
+  """
+
+  distance = 0
+  for i, first in enumerate(group):
+    for j, second in enumerate(group):
+      if i < j:
+        distance += hamming_distance(first, second)
+
+  return distance
+
+def find_optimal_group(arrays):
+  """
+  
+  Given all arrays, find the group of strings that are the least similar.
+  Uses hamming distance to calculate string similarity.
+
+  Params
+  ------
+  arrays: array of binary strings
+
+  Returns
+  -------
+  group: array - The 3 least similar bit strings of all combinations.
+  """
+
+  distances = []
+  
+  for i, first in enumerate(arrays):
+    for j, second in enumerate(arrays):
+      for k, third in enumerate(arrays):
+        if i < j and j < k:
+          distance = calc_group_distance([first, second, third])
+          distances.append((i, j, k, distance))
+
+  sorted_distances = sorted(
+    distances, key=lambda tup: tup[-1], reverse=True
+  )
+
+  indexes = sorted_distances[0][:-1]
+  print("Optimal group of memories: {}".format(indexes))
+
+  group = []
+  for index in indexes:
+    group.append(arrays[index])
+
+  group = np.array(group)
+  
+  return group
+
+
 def sort_hamming_distances(distances):
   """
   

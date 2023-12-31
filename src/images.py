@@ -103,6 +103,39 @@ def read_odd_digits(number=4, size=50):
 
   return memories
 
+def read_given_digits(digits, size=50):
+  """
+  
+  Read in only the digits passed. 
+  If Digits = [1, 2] only the 1 and 2 digit will be read and returned.
+
+  Params
+  ------
+  digits: array - Array of digits to read in.
+  size: int - Size of images to load, either 28x28, 50x50, or 280x280.
+
+  Returns
+  -------
+  memories: array - Numpy array of images for the network to remember.
+  """
+
+  if not check_image_size(size):
+    return
+  
+  memories = []
+  for digit in digits:
+    filepath = 'Digits/{}x{}/{}.png'.format(size, size, digit)
+
+    image = process_image(filepath)
+
+    memories.append(image)
+
+  memories = np.array(memories)
+  
+  return memories
+
+
+
 
 def process_image(filepath):
   """

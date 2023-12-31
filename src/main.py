@@ -4,10 +4,12 @@ import matplotlib.pyplot as plt
 
 from hopfield_net import hopfieldNet
 from images import (
-  read_images, read_odd_digits, read_single_digit, add_rng_noise
+  read_images, read_odd_digits, read_single_digit, add_rng_noise,
+  read_given_digits
 )
 from graphs import plot_graphs
-from utilities import calc_hamming_distance, sort_hamming_distances
+from utilities import find_optimal_group
+
 
 """
 
@@ -16,15 +18,15 @@ Simulation settings
 """
 
 # (image_size, image-size) - 28, 50 or 280
-image_size = 50  
+image_size = 50 
 
 # Number of images to learn 1 - 10
 # If single_digit method used, this is the digit to learn
-number_of_memories = 9
+number_of_memories = 3
 
 # Of those images learned, which one should be tested
 # - Number should be positive integer but lower than number of memories
-recreate_memory = 0
+recreate_memory = 2
 
 # Noise to add to the recreated memory / test image - integer
 amount_of_noise = int((image_size * image_size) / 4)  
@@ -33,7 +35,7 @@ amount_of_noise = int((image_size * image_size) / 4)
 pause_at_start = False
 
 # Show energy and weight graphs after simulation? 
-show_graphs = False
+show_graphs = True
 
 """
 
@@ -44,20 +46,21 @@ Main Code
 # Memory selection method
 
 memories = read_images(number_of_memories, image_size)
-#memories = read_odd_digits(number_of_memories, image_size)
-#memories = read_single_digit(number_of_memories, image_size)
+#memories = read_given_digits([0, 4, 7], image_size)
+
+#memories = find_optimal_group(memories, 3)  # Optimal digits - 0, 4, 7
 
 print("Memories shape: {}".format(memories.shape))
-print(sort_hamming_distances(calc_hamming_distance(memories)))
 
 # Set starting state
 starting_state = add_rng_noise(memories[recreate_memory], amount_of_noise)
 
 # Initalise Hopfield Network
 net = hopfieldNet(memories, starting_state)
-#net.train_hebbian()
-net.train_storkey()
-#net.storkey_test()
+
+# Train the network
+net.train_hebbian()
+#net.train_storkey()
 
 # Initalise pygame
 cellsize = 20

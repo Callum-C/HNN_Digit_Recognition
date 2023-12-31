@@ -52,7 +52,7 @@ class hopfieldNet:
 
     for memory in self.memories:
       old_weights = self.weights.copy()
-      hebbian_term = np.outer(memory, memory)
+      hebbian_term = np.outer(memory, memory.T)
 
       net_inputs = old_weights.dot(memory)
       net_inputs = np.tile(net_inputs, (self.n, 1))
@@ -78,9 +78,28 @@ class hopfieldNet:
     - Start with a 2D image (not flattened) to preserve local information.
     """
 
-    memory = self.memories[0].reshape(self.sqrt_n, self.sqrt_n)
-    
+    print("Beginning Training")
 
+    weights = np.zeros((self.n, self.n))
+
+    for pattern in self.memories:
+      outer = np.outer(pattern, pattern.T)
+      np.fill_diagonal(outer, 0)
+      weights += outer
+
+    print("Initial Loop finished")
+    weights = weights / self.n
+
+    for pattern in self.memories:
+      for j in range(self.n):
+        for k in range(self.n):
+          if j != k:
+            weights[j, k] -= pattern[j] * pattern[k]
+            weights[j, k] += pattern[j] * np.dot(weights[j], pattern)
+            weights[j, k] += pattern[k] * np.dot(weights[k], pattern)
+
+    self.weights = weights
+    print("Training Finished")
 
   def update_states(self, n_updates):
     """
