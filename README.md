@@ -62,6 +62,12 @@ As the 0, 6 and 8 are the closest digits, it is likely an improvement could occu
 However, this would mean the input would have to be the same colour, otherwise it is unlikely the network would find the correct minima.
 
 ## Results
+For the below test, a Hopfield Neural Network was initialised and trained on the ideal group of digits as determined by the Hamming distance.
+This group being the 0, the 4 and the 7. Salt and pepper noise was randomly added to each source image in turn and set as the network's starting state.
+While the amount of noise remained constant for all 6 images, the cells that were flipped were chosen at random. It is possible, although unlikely, for one cell to have been flipped multiple times.
+As shown below, the Storkey training method has much greater success restoring the 0 and the 7 digit, but still falls into the same spurious minima while attempting to restore / recall the 4.
+While the 0 falls into something of a spurious minima, it is still recognisable as a 0. On the other hand the Hebbian method fails to successfully recall any of the 3 digits to a recognisable state.
+
 ### Spurious Minima - Hebbian Training Method
 ![Spurious-Hebbian-0](https://github.com/Callum-C/HNN_Digit_Recognition/assets/60474698/45ede62d-20ab-443e-b8ed-aea611ebe709)  ![Spurious-Hebbian-4](https://github.com/Callum-C/HNN_Digit_Recognition/assets/60474698/020172f2-8252-4a07-b8bb-a289970b58b9)  ![Spurious-Hebbian-7](https://github.com/Callum-C/HNN_Digit_Recognition/assets/60474698/fd6b7c9d-1d59-4ba8-8297-3a9fdf55c289)
 
@@ -69,7 +75,11 @@ However, this would mean the input would have to be the same colour, otherwise i
 ### Spurious Minima - Storkey Training Method
 ![Spurious-Storkey-0](https://github.com/Callum-C/HNN_Digit_Recognition/assets/60474698/6d68355c-2e56-4075-b605-b72e3a673188)  ![Spurious-Storkey-4](https://github.com/Callum-C/HNN_Digit_Recognition/assets/60474698/35aab213-bd18-48d5-a6ff-db4ffbcb76b0)  ![Spurious-Storkey-7](https://github.com/Callum-C/HNN_Digit_Recognition/assets/60474698/601fb250-804b-4d0a-a67d-9672a68c2887)
 
-
+## Summary
+Hopfield Neural Networks are a great example of assosciative memory, capable of restoring a full memory from partial, in-complete or corrupted data. 
+While likely to excel in domains where memories are disctinctively different, it has been shown they struggle significantly in applications where the memories are so similar.
+With an advertised capacity of 0.15 * N, at 2500 neurons and failing to recall 3 or more digits, the HNN falls short of expectations.
+The Storkey Training Method is a definitive improvement over the Hebbian method, but still leaves something to be desired.
 
 ## Further Reading
 Inspired by https://towardsdatascience.com/hopfield-networks-neural-memory-machines-4c94be821073
